@@ -2,57 +2,18 @@ import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import logo from './logo.svg'
 import './App.css'
+import { Greeter } from '../../typechain'
+import GreeterArtifact from  '../../artifacts/contracts/Greeter.sol/Greeter.json'
 
 function App() {
   const [message, setMessage] = useState("");
   const [inputGreeting, setInputGreeting] = useState("");
 
-  // TODO: load abi automatically
-  let abi = JSON.parse(`[                                                                                                                                                                                                         
-    {                                                                                                                                                                                                              
-      "inputs": [                                                                                                                                                                                                  
-        {                                                                                                                                                                                                          
-          "internalType": "string",                                                                                                                                                                                
-          "name": "_greeting",                                                                                                                                                                                     
-          "type": "string"                                                                                                                                                                                         
-        }                                                                                                                                                                                                          
-      ],                                                                                                                                                                                                           
-      "stateMutability": "nonpayable",                                                                                                                                                                             
-      "type": "constructor"                                                                                                                                                                                        
-    },                                                                                                                                                                                                             
-    {                                                                                                                                                                                                              
-      "inputs": [],                                                                                                                                                                                                
-      "name": "greet",                                                                                                                                                                                             
-      "outputs": [                                                                                                                                                                                                 
-        {                                                                                                                                                                                                          
-          "internalType": "string",                                                                                                                                                                                
-          "name": "",                                                                                                                                                                                              
-          "type": "string"                                                                                                                                                                                         
-        }                                                                                                                                                                                                          
-      ],                                                                                                                                                                                                           
-      "stateMutability": "view",                                                                                                                                                                                   
-      "type": "function"                                                                                                                                                                                           
-    },                                                                                                                                                                                                             
-    {                                                                                                                                                                                                              
-      "inputs": [                                                                                                                                                                                                  
-        {                                                                                                                                                                                                          
-          "internalType": "string",                                                                                                                                                                                
-          "name": "_greeting",                                                                                                                                                                                     
-          "type": "string"                                                                                                                                                                                         
-        }                                                                                                                                                                                                          
-      ],                                                                                                                                                                                                           
-      "name": "setGreeting",                                                                                                                                                                                       
-      "outputs": [],                                                                                                                                                                                               
-      "stateMutability": "nonpayable",                                                                                                                                                                             
-      "type": "function"
-    }
-  ]`)
-
   // TODO: use web3modal to initialize provider
   window.ethereum.enable();
   let provider = new ethers.providers.Web3Provider(window.ethereum);
   let signer = provider.getSigner(0);
-  let greeter = new ethers.Contract('0x5fbdb2315678afecb367f032d93f642f64180aa3', abi, signer);
+  let greeter = new ethers.Contract('0x5fbdb2315678afecb367f032d93f642f64180aa3', GreeterArtifact["abi"], signer) as Greeter;
 
   useEffect(() => {
     const doAsync = async () => {
@@ -68,6 +29,7 @@ function App() {
   ) => {
     e.preventDefault();
     if (!await greeter.deployed()) throw Error("Greeter not deployed");
+      greeter.setGreeting
       const tx = await greeter.setGreeting(inputGreeting);
       console.log("setGreeting tx", tx);
       await tx.wait();
