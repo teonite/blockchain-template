@@ -1,23 +1,31 @@
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
+import Web3Modal from "web3modal";
 import logo from './logo.svg'
 import './App.css'
 import { Greeter } from '../../typechain'
-import GreeterArtifact from  '../../artifacts/contracts/Greeter.sol/Greeter.json'
+import GreeterArtifact from '../../artifacts/contracts/Greeter.sol/Greeter.json'
 
 function App() {
   const [message, setMessage] = useState("");
   const [inputGreeting, setInputGreeting] = useState("");
-
-  // TODO: use web3modal to initialize provider
-  window.ethereum.enable();
-  let provider = new ethers.providers.Web3Provider(window.ethereum);
-  let signer = provider.getSigner(0);
-  let greeter = new ethers.Contract('0x5fbdb2315678afecb367f032d93f642f64180aa3', GreeterArtifact["abi"], signer) as Greeter;
+  const [greeter, setGreeter] = useState<Greeter>();
 
   useEffect(() => {
     const doAsync = async () => {
-      if (!await greeter.deployed()) return;
+      // initialize wallet connection
+      const web3Modal = new Web3Modal({ providerOptions: {} });
+      const instance = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(instance);
+      const signer = provider.getSigner();
+      setGreeter(new ethers.Contract('0x5fbdb2315678afecb367f032d93f642f64180aa3', GreeterArtifact["abi"], signer) as Greeter);
+    };
+    doAsync();
+  }, []);
+
+  useEffect(() => {
+    const doAsync = async () => {
+      if (!(greeter && await greeter.deployed())) return;
       console.log("Greeter is deployed at ", greeter.address);
       setMessage(await greeter.greet());
     };
@@ -28,15 +36,14 @@ function App() {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    if (!await greeter.deployed()) throw Error("Greeter not deployed");
-      greeter.setGreeting
-      const tx = await greeter.setGreeting(inputGreeting);
-      console.log("setGreeting tx", tx);
-      await tx.wait();
-      const _message = await greeter.greet();
-      console.log("New greeting mined, result: ", _message);
-      setMessage(_message);
-      setInputGreeting("");
+    if (!(greeter && await greeter.deployed())) throw Error("Greeter not ready");
+    const tx = await greeter.setGreeting(inputGreeting);
+    console.log("setGreeting tx", tx);
+    await tx.wait();
+    const _message = await greeter.greet();
+    console.log("New greeting mined, result: ", _message);
+    setMessage(_message);
+    setInputGreeting("");
   };
 
   return (
