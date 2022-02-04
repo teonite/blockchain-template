@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react'
-import { ethers } from 'ethers'
-import Web3Modal from "web3modal";
-import logo from './logo.svg'
-import './App.css'
-import { Greeter } from '../../typechain'
-import GreeterArtifact from '../../artifacts/contracts/Greeter.sol/Greeter.json'
+import './App.css';
+
+import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
+import Web3Modal from 'web3modal';
+
+import GreeterArtifact from '../../artifacts/contracts/Greeter.sol/Greeter.json';
+import { Greeter } from '../../typechain';
+import logo from './logo.svg';
 
 function App() {
-  const [message, setMessage] = useState("");
-  const [inputGreeting, setInputGreeting] = useState("");
+  const [message, setMessage] = useState('');
+  const [inputGreeting, setInputGreeting] = useState('');
   const [greeter, setGreeter] = useState<Greeter>();
 
   useEffect(() => {
@@ -18,15 +20,21 @@ function App() {
       const instance = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(instance);
       const signer = provider.getSigner();
-      setGreeter(new ethers.Contract('0x5fbdb2315678afecb367f032d93f642f64180aa3', GreeterArtifact["abi"], signer) as Greeter);
+      setGreeter(
+        new ethers.Contract(
+          '0x5fbdb2315678afecb367f032d93f642f64180aa3',
+          GreeterArtifact.abi,
+          signer
+        ) as Greeter
+      );
     };
     doAsync();
   }, []);
 
   useEffect(() => {
     const doAsync = async () => {
-      if (!(greeter && await greeter.deployed())) return;
-      console.log("Greeter is deployed at ", greeter.address);
+      if (!(greeter && (await greeter.deployed()))) return;
+      console.log('Greeter is deployed at ', greeter.address);
       setMessage(await greeter.greet());
     };
     doAsync();
@@ -36,14 +44,15 @@ function App() {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    if (!(greeter && await greeter.deployed())) throw Error("Greeter not ready");
+    if (!(greeter && (await greeter.deployed())))
+      throw Error('Greeter not ready');
     const tx = await greeter.setGreeting(inputGreeting);
-    console.log("setGreeting tx", tx);
+    console.log('setGreeting tx', tx);
     await tx.wait();
     const _message = await greeter.greet();
-    console.log("New greeting mined, result: ", _message);
+    console.log('New greeting mined, result: ', _message);
     setMessage(_message);
-    setInputGreeting("");
+    setInputGreeting('');
   };
 
   return (
@@ -82,7 +91,7 @@ function App() {
         </p>
       </header>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
