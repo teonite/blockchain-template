@@ -7,6 +7,7 @@ import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "@openzeppelin/hardhat-upgrades";
+import "@openzeppelin/hardhat-defender";
 
 dotenv.config();
 
@@ -22,9 +23,12 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
-
 const config: HardhatUserConfig = {
   solidity: "0.8.4",
+  defender: {
+    apiKey: process.env.DEFENDER_TEAM_API_KEY || "",
+    apiSecret: process.env.DEFENDER_TEAM_API_SECRET_KEY || "",
+  },
   networks: {
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
