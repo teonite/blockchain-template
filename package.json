@@ -39,7 +39,9 @@
     "prepare": "husky install",
     "node": "npx hardhat node",
     "deploy": "npx hardhat run --network localhost scripts/deploy.ts",
-    "dev": "cd frontend && yarn run dev",
+    "dev": "cd frontend && yarn dev",
+    "lint:frontend": "cd frontend && yarn lint",
+    "lint:contracts": "yarn solhint ./contracts/**/*.sol",
     "test:contracts": "hardhat test"
   }
 }
