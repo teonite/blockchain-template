@@ -40,6 +40,6 @@
     "node": "npx hardhat node",
     "deploy": "npx hardhat run --network localhost scripts/deploy.ts",
     "dev": "cd frontend && yarn run dev",
-    "test": "npx hardhat test"
+    "test:contracts": "hardhat test"
   }
 }

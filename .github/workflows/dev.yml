@@ -1,0 +1,136 @@
+name: Development
+
+on:
+  # pull_request:
+  #   branches:
+  #     - master
+  #     - 'release/**'
+
+  push:
+    branches:
+      - feat/ci
+      - 'release/**'
+
+jobs:
+  commit-lint:
+    name: Lint Commit Message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Lint commit message
+        uses: wagoid/commitlint-github-action@v4
+
+  lint:
+    name: Lint Source Code
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get Node.js version #https://github.com/actions/setup-node/pull/338
+        id: nvm
+        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ steps.nvm.outputs.NODE_VERSION }}
+          cache: 'yarn'
+      - name: Install modules
+        run: yarn install && cd frontend && yarn install
+      - name: Lint
+        uses: reviewdog/action-eslint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          fail_on_error: true
+
+  # solhint:
+  #   name: Solhint Source Code
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Get Node.js version #https://github.com/actions/setup-node/pull/338
+  #       id: nvm
+  #       run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+  #     - name: Setup node
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: ${{ steps.nvm.outputs.NODE_VERSION }}
+  #         cache: 'yarn'
+  #     - name: Setup reviewdog
+  #       uses: reviewdog/action-setup@v1
+  #     - name: Install modules
+  #       run: yarn install
+  #     - name: Run solhint
+  #       env:
+  #         REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       run: |
+  #         reviewdog -reporter=github-check -runners=solhint
+
+  # sast:
+  #   name: SAST
+  #   runs-on: ubuntu-latest
+  #   needs: [commit-lint, lint, solhint]
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Get Node.js version #https://github.com/actions/setup-node/pull/338
+  #       id: nvm
+  #       run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+  #     - name: Setup node
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: ${{ steps.nvm.outputs.NODE_VERSION }}
+  #         cache: 'yarn'
+  #     - name: Slither
+  #       uses: luisfontes19/slither-static-analysis-action@v0.3.4
+  #       with:
+  #         slither-version: '0.8.2'
+  #         run-npm-install: true
+
+  test-contracts:
+    name: Run Contract Tests
+    runs-on: ubuntu-latest
+    needs: [commit-lint, lint]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get Node.js version #https://github.com/actions/setup-node/pull/338
+        id: nvm
+        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ steps.nvm.outputs.NODE_VERSION }}
+          cache: 'yarn'
+      - name: Install modules
+        run: yarn install
+      - name: Run tests
+        run: yarn test:contracts
+
+  # test-frontend:
+  #   name: Run Contract Tests
+  #   runs-on: ubuntu-latest
+  #   needs: [commit-lint, lint]
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Get Node.js version #https://github.com/actions/setup-node/pull/338
+  #       id: nvm
+  #       run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+  #     - name: Setup node
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: ${{ steps.nvm.outputs.NODE_VERSION }}
+  #         cache: 'yarn'
+  #     - name: Install modules
+  #       run: cd frontend && yarn install
+  #     - name: Run tests
+  #       run: yarn test
