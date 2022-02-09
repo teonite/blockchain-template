@@ -3,13 +3,12 @@ node_modules
 coverage
 coverage.json
 typechain
-
-#Hardhat files
-cache
-artifacts
-
 .DS_Store
 dist
 dist-ssr
 *.local
 
+#Hardhat files
+cache
+artifacts
+.openzeppelin
