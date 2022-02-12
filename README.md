@@ -1,46 +1,70 @@
-# Advanced Sample Hardhat Project
+This project demonstrates a setup for smart-contract development with hardhat and react.js
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
+# Hardhat & react blockchain template
 
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
+## Usage
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-npx hardhat help
-REPORT_GAS=true npx hardhat test
-npx hardhat coverage
-npx hardhat run scripts/deploy.ts
-TS_NODE_FILES=true npx ts-node scripts/deploy.ts
-npx eslint '**/*.{js,ts}'
-npx eslint '**/*.{js,ts}' --fix
-npx prettier '**/*.{json,sol,md}' --check
-npx prettier '**/*.{json,sol,md}' --write
-npx solhint 'contracts/**/*.sol'
-npx solhint 'contracts/**/*.sol' --fix
+Clone this repo:
+```
+git clone git@github.com:teonite/blockchain-template.git
 ```
 
-# Etherscan verification
-
-To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
-
-In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
-
-```shell
-hardhat run --network ropsten scripts/sample-script.ts
+Install hardhat & frontend dependencies:
+```
+yarn install && cd frontend && yarn install
 ```
 
-Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
+Prepare .env file:
+```
+cp .env.example .env
+```
+and fill in your variables.
 
-```shell
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
+### Local development
+For local development we'll use a hardhat node. Run it with:
+```
+yarn node
 ```
 
-# Performance optimizations
+Then we need to deploy the contract: 
+```
+yarn deploy:local
+```
+Your node logs should display info about the deployment.
 
-For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
+Once the contract is deployed you can run vite dev server and start hacking on your app:
+```
+yarn dev
+```
+
+Run contract tests with:
+```
+yarn test:contracts
+```
+
+More info:
+* https://hardhat.org/getting-started/
+* https://vitejs.dev/guide/
+
+### Deployments
+Once the network is configured in hardhat.config.ts, you can deploy contracts with
+```
+yarn hardhat run --network <YOUR_NETWORK> scripts/deploy.ts
+```
+To upgrade a contract using OpenZeppelin Defender and Gnosis Safe wallet run:
+```
+yarn hardhat run --network <YOUR_NETWORK> scripts/propose-upgrade.ts
+```
+For multisig deployments it's recommended to deploy to Rinkeby network since Gnosis Safe does not support Ropsten.
+## Used libs & tech
+* https://hardhat.org/ - Ethereum development environment
+* https://vitejs.dev/ - alternative to create react app
+* https://defender.openzeppelin.com/ - security operations platform for Ethereum
+* https://gnosis-safe.io/ - multisignature wallet platform
+* https://github.com/dethcrypto/TypeChain - TypeScript bindings for Ethereum smart contracts
+* https://github.com/ethers-io/ethers.js/ - Ethereum wallet implementation in JS/TS
+* https://github.com/protofire/solhint - Solidity code linter
+
+## TODOs & issues
+* no hot reloading for contract, could possibly be resolved with https://github.com/symfoni/symfoni-monorepo, but the library seems abandoned (https://github.com/symfoni/hardhat-react-boilerplate/pull/10)
+* CI contract upgrades don't work - to make it work we'll have to commit .openzeppelin directory to git from gh job.
