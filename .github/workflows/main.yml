@@ -1,10 +1,10 @@
-name: Development
+name: Main build
 
 on:
   pull_request:
     branches:
       - main
-      - multisig
+      - no-multisig
 
 jobs:
   commit-lint:

@@ -40,8 +40,10 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "node": "npx hardhat node",
-    "deploy": "npx hardhat run --network localhost scripts/deploy.ts",
+    "node": "yarn hardhat node",
+    "deploy:local": "yarn hardhat run --network localhost scripts/deploy.ts",
+    "deploy:rinkeby": "yarn hardhat run --network rinkeby scripts/deploy.ts",
+    "upgrade:rinkeby": "yarn hardhat run --network rinkeby scripts/propose-upgrade.ts",
     "dev": "cd frontend && yarn dev",
     "lint:frontend": "cd frontend && yarn lint",
     "lint:contracts": "yarn solhint ./contracts/**/*.sol",
