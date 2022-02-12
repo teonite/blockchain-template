@@ -4,14 +4,15 @@ import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import Web3Modal from 'web3modal';
 
-import GreeterArtifact from '../../artifacts/contracts/Greeter.sol/Greeter.json';
-import { Greeter } from '../../typechain';
+import GreeterArtifact from '../../artifacts/contracts/GreeterV2.sol/GreeterV2.json';
+import { GreeterV2 } from '../../typechain';
 import logo from './logo.svg';
 
 function App() {
   const [message, setMessage] = useState('');
+  const [version, setVersion] = useState('');
   const [inputGreeting, setInputGreeting] = useState('');
-  const [greeter, setGreeter] = useState<Greeter>();
+  const [greeter, setGreeter] = useState<GreeterV2>();
 
   useEffect(() => {
     const doAsync = async () => {
@@ -26,7 +27,7 @@ function App() {
           '0xef29a00A3E6F32F896972C168ec8f6fE9Ffb1a16',
           GreeterArtifact.abi,
           signer
-        ) as Greeter
+        ) as GreeterV2
       );
     };
     doAsync();
@@ -37,6 +38,7 @@ function App() {
       if (!(greeter && (await greeter.deployed()))) return;
       console.log('Greeter is deployed at ', greeter.address);
       setMessage(await greeter.greet());
+      setVersion(await greeter.version());
     };
     doAsync();
   }, [greeter]);
@@ -61,6 +63,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>{message}</p>
+        <p>v{version}</p>
         <input
           value={inputGreeting}
           onChange={(e) => setInputGreeting(e.target.value)}

@@ -45,6 +45,7 @@
     "deploy:rinkeby": "yarn hardhat run --network rinkeby scripts/deploy.ts",
     "upgrade:rinkeby": "yarn hardhat run --network rinkeby scripts/propose-upgrade.ts",
     "dev": "cd frontend && yarn dev",
+    "types": "yarn hardhat typechain",
     "lint:frontend": "cd frontend && yarn lint",
     "lint:contracts": "yarn solhint ./contracts/**/*.sol",
     "test:contracts": "hardhat test"
