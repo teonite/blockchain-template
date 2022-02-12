@@ -7,7 +7,6 @@ jobs:
   upgrade-rinkeby:
     name: Deploy To Rinkeby
     runs-on: ubuntu-latest
-    needs: [commit-lint, lint-contracts, test-contracts]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -21,7 +20,7 @@ jobs:
           cache: 'yarn'
       - name: Install modules
         run: yarn install
-      - name: Upgrade
+      - name: Upgrade contract
         env:
           DEFENDER_TEAM_API_KEY: ${{ secrets.DEFENDER_TEAM_API_KEY }}
           DEFENDER_TEAM_API_SECRET_KEY: ${{ secrets.DEFENDER_TEAM_API_SECRET_KEY }}
