@@ -4,7 +4,6 @@ import { ethers, upgrades } from "hardhat";
 async function main() {
   const Greeter = await ethers.getContractFactory('Greeter');
   console.log('Deploying Greeter...');
-  // const greeter = await upgrades.deployProxy(Greeter, [ethers.utils.formatBytes32String("Hello, multisig!"), { initializer: 'memory' }]);
   const greeter = await upgrades.deployProxy(Greeter, ["Hello, multisig!"]);
   console.log('Greeter deployed to:', greeter.address);
 }

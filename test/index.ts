@@ -40,7 +40,7 @@ describe("GreeterV2", function () {
     expect(await greeter.greet()).to.equal("Hola, mundo!");
   });
 
-  it("Should foobar", async function () {
+  it("Should return version", async function () {
     const Greeter = await ethers.getContractFactory("GreeterV2");
     const greeter = await Greeter.deploy();
     await greeter.deployed();
@@ -48,6 +48,6 @@ describe("GreeterV2", function () {
     const initTx = await greeter.initialize("Hello, world!");
     await initTx.wait();
 
-    expect(await greeter.foo()).to.equal("bar");
+    expect(await greeter.version()).to.equal("2.0");
   });
 });
