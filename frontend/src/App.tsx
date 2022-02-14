@@ -23,6 +23,7 @@ function App() {
       const signer = provider.getSigner();
       setGreeter(
         new ethers.Contract(
+          // TODO: get from .env
           '0x5fbdb2315678afecb367f032d93f642f64180aa3',
           // '0xef29a00A3E6F32F896972C168ec8f6fE9Ffb1a16',
           GreeterArtifact.abi,

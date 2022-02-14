@@ -1,6 +1,7 @@
 import { defender, ethers } from "hardhat";
 
 async function main() {
+  // TODO: get from .env
   const proxyAddress = '0xef29a00A3E6F32F896972C168ec8f6fE9Ffb1a16';
 
   const GreeterV2 = await ethers.getContractFactory("GreeterV2");

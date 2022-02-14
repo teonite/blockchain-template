@@ -46,16 +46,27 @@ More info:
 * https://hardhat.org/getting-started/
 * https://vitejs.dev/guide/
 
-### Deployments
-Once the network is configured in hardhat.config.ts, you can deploy contracts with
+### Multisignature deployments with Gnosis Safe and OpenZeppelin Defender
+For multisignature deployment, you'll need an OpenZeppelin account and a Gnosis Safe.
+Follow this guide to gain understanding of the whole multisig deployment process: https://docs.openzeppelin.com/defender/guide-upgrades.
+This repository comes with multisig deployment helper scripts. Fill in your .env file with Gnosis Safe address and:
+
+1. Deploy the proxy contract to Rinkeby network:
 ```
-yarn hardhat run --network <YOUR_NETWORK> scripts/deploy.ts
+yarn deploy:rinkeby
 ```
-To upgrade a contract using OpenZeppelin Defender and Gnosis Safe wallet run:
+Then fill in .env file with proxy contract address.
+
+2. Transfer proxy ownership to Gnosis Safe:
 ```
-yarn hardhat run --network <YOUR_NETWORK> scripts/propose-upgrade.ts
+yarn transfer-ownership:rinkeby
 ```
-For multisig deployments it's recommended to deploy to Rinkeby network since Gnosis Safe does not support Ropsten.
+
+3. Once the changes were made to the contract, you can propose the upgrade with:
+```
+yarn upgrade:rinkeby
+```
+
 ## Used libs & tech
 * https://hardhat.org/ - Ethereum development environment
 * https://vitejs.dev/ - alternative to create react app
