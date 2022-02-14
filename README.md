@@ -11,7 +11,7 @@ git clone git@github.com:teonite/blockchain-template.git
 
 Install hardhat & frontend dependencies:
 ```
-yarn install && cd frontend && yarn install
+yarn install && pushd frontend && yarn install && popd
 ```
 
 Prepare .env file:
@@ -23,7 +23,7 @@ and fill in your variables.
 ### Local development
 For local development we'll use a hardhat node. Run it with:
 ```
-yarn node
+yarn run node
 ```
 
 Then we need to deploy the contract: 

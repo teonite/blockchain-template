@@ -14,10 +14,12 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Greeter = await ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
-
+  const Greeter = await ethers.getContractFactory("GreeterV2");
+  const greeter = await Greeter.deploy();
   await greeter.deployed();
+
+  const initTx = await greeter.initialize("Hello, world!");
+  await initTx.wait();
 
   console.log("Greeter deployed to:", greeter.address);
 }
