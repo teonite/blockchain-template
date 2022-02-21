@@ -40,6 +40,11 @@ const config: HardhatUserConfig = {
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
+    "polygon-mainnet": {
+      url: process.env.POLYGON_MAINNET_URL || "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
     "polygon-mumbai": {
       url: process.env.POLYGON_MUMBAI_URL || "",
       accounts:
